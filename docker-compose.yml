@@ -39,7 +39,7 @@ services:
           - ${DATA_FOLDER}/kimai_plugins:/opt/kimai/var/plugins
           - ${DATA_FOLDER}/kimai_config/local.yaml:/opt/kimai/config/packages/local.yaml
       ports:
-          - "${KIMAI_PORT:-8081}:8001"
+          - '${KIMAI_PORT:-127.0.0.1:8081}:8001'
       environment:
           - ADMINMAIL=${KIMAI_USER}
           - ADMINPASS=${KIMAI_PASSWORD}
