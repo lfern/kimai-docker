@@ -14,17 +14,17 @@ services:
   #     - ${DATA_FOLDER}/caddy_config/Caddyfile:/etc/caddy/Caddyfile
 
   sqldb:
-      image: mysql:8.3
-      volumes:
+    image: mysql:8.3
+    volumes:
         - mysql_data:/var/lib/mysql
-      environment:
+    environment:
         - MYSQL_DATABASE=${MYSQL_DATABASE}
         - MYSQL_USER=${MYSQL_USER}
         - MYSQL_PASSWORD=${MYSQL_PASSWORD}
         - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      command: --default-storage-engine innodb
-      restart: unless-stopped
-      healthcheck:
+    command: --default-storage-engine innodb
+    restart: unless-stopped
+    healthcheck:
         test: mysqladmin -p${MYSQL_ROOT_PASSWORD} ping -h localhost
         interval: 20s
         start_period: 10s
@@ -32,21 +32,21 @@ services:
         retries: 3
 
   kimai:
-      image: kimai/kimai2:apache
-      volumes:
-        - kimai_data:/opt/kimai/var/data
-        #- kimai_plugins:/opt/kimai/var/plugins
-        - ${DATA_FOLDER}/kimai_plugins:/opt/kimai/var/plugins
-        - ${DATA_FOLDER}/kimai_config/local.yaml:/opt/kimai/config/packages/local.yaml
-      ports:
-        - '${KIMAI_PORT:-127.0.0.1:8001}:8000'
-      environment:
-        - ADMINMAIL=${KIMAI_USER}
-        - ADMINPASS=${KIMAI_PASSWORD}
-        - "DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@sqldb/${MYSQL_DATABASE}?harset=utf8mb4&serverVersion=8.3.0"
-        - TRUSTED_HOSTS=localhost,127.0.0.1,${SUBDOMAIN}.${DOMAIN_NAME}
-        - TZ=${TIMEZONE}
-      restart: unless-stopped
+    image: kimai/kimai2:apache
+    volumes:
+      - kimai_data:/opt/kimai/var/data
+      #- kimai_plugins:/opt/kimai/var/plugins
+      - ${DATA_FOLDER}/kimai_plugins:/opt/kimai/var/plugins
+      - ${DATA_FOLDER}/kimai_config/local.yaml:/opt/kimai/config/packages/local.yaml
+    ports:
+      - '${KIMAI_PORT:-127.0.0.1:8001}:8000'
+    environment:
+      - ADMINMAIL=${KIMAI_USER}
+      - ADMINPASS=${KIMAI_PASSWORD}
+      - "DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@sqldb/${MYSQL_DATABASE}?harset=utf8mb4&serverVersion=8.3.0"
+      - TRUSTED_HOSTS=localhost,127.0.0.1,${SUBDOMAIN}.${DOMAIN_NAME}
+      - TZ=${TIMEZONE}
+    restart: unless-stopped
 
 volumes:
   # caddy_data:
