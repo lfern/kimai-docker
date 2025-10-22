@@ -1,0 +1,5 @@
+.env
+
+# Ignore kimai_plugins directory except .gitkeep
+kimai_plugins/*
+!kimai_plugins/.gitkeep
